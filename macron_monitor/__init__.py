@@ -1,4 +1,9 @@
+import dataclasses
+import logging
+
 from unidecode import unidecode
+
+module_logger = logging.getLogger(__name__)
 
 WORDS = [
     "Ahikōuka",
@@ -213,3 +218,23 @@ WORDS = [
 ]
 
 SUSPICIOUS_WORDS = set(map(lambda word: unidecode(word.lower()), WORDS))
+
+
+@dataclasses.dataclass()
+class DeletedMacronRev:
+    title: str
+    user: str
+    revision: dict
+    added: int
+    removed: int
+
+    def to_string(self):
+        return f"* ~~~~~ ({{{{diff2|{self.revision['new']}|diff}}}}) — [[{self.title}]] — [[User:{self.user}|{self.user}]] ([[User_talk:{self.user}|talk]] | [[Special:Contributions/{self.user}|contribs]]) — removed '''{self.removed-self.added}''' macron(s)"
+
+
+@dataclasses.dataclass()
+class MisspelledWordRev:
+    title: str
+    user: str
+    revision: dict
+    word: str

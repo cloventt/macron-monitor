@@ -586,6 +586,26 @@ files = [
 typing-extensions = {version = ">=4.1.0", markers = "python_version < \"3.11\""}
 
 [[package]]
+name = "mwoauth"
+version = "0.4.0"
+description = "A generic MediaWiki OAuth handshake helper."
+optional = false
+python-versions = "*"
+files = [
+    {file = "mwoauth-0.4.0-py3-none-any.whl", hash = "sha256:fed9bc7d6bbabb5f691b918af0ac844e13c9b75d5fa51a898f36d54d798b5fe1"},
+    {file = "mwoauth-0.4.0.tar.gz", hash = "sha256:22e3403e748e70146f8eccc1430fe542c9f9c4ff677eff424a52e644f6d8f7c5"},
+]
+
+[package.dependencies]
+oauthlib = "*"
+PyJWT = ">=1.0.1"
+requests = "*"
+requests-oauthlib = "*"
+
+[package.extras]
+flask = ["flask"]
+
+[[package]]
 name = "mwparserfromhell"
 version = "0.6.6"
 description = "MWParserFromHell is a parser for MediaWiki wikicode."
@@ -619,6 +639,22 @@ files = [
     {file = "mwparserfromhell-0.6.6-cp39-cp39-win_amd64.whl", hash = "sha256:1960bcc5115ea57427df130150edf1dbfc2fb03465e548e630bb6eb37976d793"},
     {file = "mwparserfromhell-0.6.6.tar.gz", hash = "sha256:71afec1e9784ba576e95d6f34845582d3c733a3a52ba770dd8a9c3a40e5b649f"},
 ]
+
+[[package]]
+name = "oauthlib"
+version = "3.2.2"
+description = "A generic, spec-compliant, thorough implementation of the OAuth request-signing logic"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "oauthlib-3.2.2-py3-none-any.whl", hash = "sha256:8139f29aac13e25d502680e9e19963e83f16838d48a0d71c287fe40e7067fbca"},
+    {file = "oauthlib-3.2.2.tar.gz", hash = "sha256:9859c40929662bec5d64f34d01c99e093149682a3f38915dc0655d5a633dd918"},
+]
+
+[package.extras]
+rsa = ["cryptography (>=3.0.0)"]
+signals = ["blinker (>=1.4.0)"]
+signedtoken = ["cryptography (>=3.0.0)", "pyjwt (>=2.0.0,<3)"]
 
 [[package]]
 name = "packaging"
@@ -753,6 +789,23 @@ files = [
 ]
 
 [[package]]
+name = "pyjwt"
+version = "2.9.0"
+description = "JSON Web Token implementation in Python"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "PyJWT-2.9.0-py3-none-any.whl", hash = "sha256:3b02fb0f44517787776cf48f2ae25d8e14f300e6d7545a4315cee571a415e850"},
+    {file = "pyjwt-2.9.0.tar.gz", hash = "sha256:7e1e5b56cc735432a7369cbfa0efe50fa113ebecdc04ae6922deba8b84582d0c"},
+]
+
+[package.extras]
+crypto = ["cryptography (>=3.4.0)"]
+dev = ["coverage[toml] (==5.0.4)", "cryptography (>=3.4.0)", "pre-commit", "pytest (>=6.0.0,<7.0.0)", "sphinx", "sphinx-rtd-theme", "zope.interface"]
+docs = ["sphinx", "sphinx-rtd-theme", "zope.interface"]
+tests = ["coverage[toml] (==5.0.4)", "pytest (>=6.0.0,<7.0.0)"]
+
+[[package]]
 name = "pywikibot"
 version = "9.4.1"
 description = "Python MediaWiki Bot Framework"
@@ -764,6 +817,7 @@ files = [
 ]
 
 [package.dependencies]
+mwoauth = {version = ">=0.2.4,<0.3.1 || >0.3.1", optional = true, markers = "extra == \"mwoauth\""}
 mwparserfromhell = ">=0.5.2"
 packaging = "*"
 requests = ">=2.21.0"
@@ -804,6 +858,24 @@ urllib3 = ">=1.21.1,<3"
 [package.extras]
 socks = ["PySocks (>=1.5.6,!=1.5.7)"]
 use-chardet-on-py3 = ["chardet (>=3.0.2,<6)"]
+
+[[package]]
+name = "requests-oauthlib"
+version = "2.0.0"
+description = "OAuthlib authentication support for Requests."
+optional = false
+python-versions = ">=3.4"
+files = [
+    {file = "requests-oauthlib-2.0.0.tar.gz", hash = "sha256:b3dffaebd884d8cd778494369603a9e7b58d29111bf6b41bdc2dcd87203af4e9"},
+    {file = "requests_oauthlib-2.0.0-py2.py3-none-any.whl", hash = "sha256:7dd8a5c40426b779b0868c404bdef9768deccf22749cde15852df527e6269b36"},
+]
+
+[package.dependencies]
+oauthlib = ">=3.0.0"
+requests = ">=2.0.0"
+
+[package.extras]
+rsa = ["oauthlib[signedtoken] (>=3.0.0)"]
 
 [[package]]
 name = "six"
@@ -979,4 +1051,4 @@ propcache = ">=0.2.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "32c32bd776ec911533b2c801ac8168f9510188964c3e07db92532819026d316d"
+content-hash = "d090bc5f951fd95f1883c35f827fc1fe524fa8c00b6df4408b4b37419f1ad841"
