@@ -65,6 +65,8 @@ class MacronMonitor(SingleSiteBot):
             if any(detected_issues):
                 DETECTIONS_COUNT.inc()
                 for suspicious_rev in detected_issues:
+                    if suspicious_rev is None:
+                        continue
                     print(suspicious_rev.to_string())
                     self._update_alert_list(suspicious_rev)
 
@@ -72,7 +74,10 @@ class MacronMonitor(SingleSiteBot):
             self._instance_logger.error("Received an exception connecting to the Wikimedia API", exc_info=apierror)
 
     def _update_alert_list(self, alert_data: SuspiciousRev) -> None:
-        page = pywikibot.Page(self.site, alert_data.alert_page)
+        page = pywikibot.Page(self.site,
+                              #alert_data.alert_page,
+                              'User:MacronMonitor/Alerts'
+                              )
         current_list = page.get()
 
         new_content = current_list.replace('==Alerts==\n', f'==Alerts==\n{alert_data.to_string()}\n')
