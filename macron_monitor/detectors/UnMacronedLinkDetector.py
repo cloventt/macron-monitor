@@ -3,7 +3,7 @@ from macron_monitor.detectors import Detector
 
 import re
 
-unmacroned_link_regex = re.compile(r'\[\[([^\[]*?(?=[āēīōū]+?)[^\[]*)\|[^āēīōū]*?]]')
+unmacroned_link_regex = re.compile(r'\[\[([^\[]*?(?=[ĀĒĪŌŪāēīōū]+?)[^\[\]]*?)\|[^ĀĒĪŌŪāēīōū]*?]]')
 
 
 class UnMacronedLinkDetector(Detector):
@@ -22,6 +22,6 @@ class UnMacronedLinkDetector(Detector):
                 title=change['title'],
                 user=change['user'],
                 revision=change['revision'],
-                reason=f"link descriptions overwrite macrons from ''{', '.join(matches)}''",
+                reason=f"link descriptions overwrite macrons from '''{', '.join(sorted(list(set(matches))))}'''",
             )
 

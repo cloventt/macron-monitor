@@ -37,7 +37,9 @@ class MacronMonitor(SingleSiteBot):
         super().__init__(**kwargs)
 
         self.site = pywikibot.Site('en', 'wikipedia', user='MacronMonitor')
-        self.site.login()
+        login_result = self.site.login()
+        if not login_result:
+            self._instance_logger.critical("Failed to log in")
 
         self.stream = EventStreams(
             streams=['recentchange', 'revision-create'],
@@ -75,8 +77,8 @@ class MacronMonitor(SingleSiteBot):
 
     def _update_alert_list(self, alert_data: SuspiciousRev) -> None:
         page = pywikibot.Page(self.site,
-                              # alert_data.alert_page,
-                              'User:MacronMonitor/Alerts'
+                              alert_data.alert_page,
+                              # 'User:MacronMonitor/Alerts'
                               )
         current_list = page.get()
 
