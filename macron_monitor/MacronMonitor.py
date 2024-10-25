@@ -2,6 +2,7 @@ import json
 import logging
 import time
 from pathlib import Path
+from typing import List
 
 import click
 import pywikibot
@@ -10,9 +11,10 @@ from pywikibot import diff
 from pywikibot.bot import SingleSiteBot
 from pywikibot.comms.eventstreams import EventStreams
 
-from macron_monitor import SUSPICIOUS_WORDS, DeletedMacronRev, module_logger
-
-macrons = ['ā', 'ē', 'ī', 'ō', 'ū']
+from macron_monitor import SUSPICIOUS_WORDS, module_logger, SuspiciousRev
+from macron_monitor.detectors import Detector
+from macron_monitor.detectors.RemovedMacronDetector import RemovedMacronDetector
+from macron_monitor.detectors.UnMacronedLinkDetector import UnMacronedLinkDetector
 
 HANDLE_TIME = Summary('change_processing_seconds', 'Time spent processing a change')
 DETECTIONS_COUNT = Counter('suspicious_edits_detected', 'Suspicious edits detected')
@@ -23,6 +25,11 @@ STREAM_LAG = Gauge('change_stream_lag_seconds',
 
 class MacronMonitor(SingleSiteBot):
     _class_logger = module_logger.getChild(__qualname__)
+
+    detectors: List[Detector] = [
+        RemovedMacronDetector(),
+        UnMacronedLinkDetector(),
+    ]
 
     def __init__(self, **kwargs) -> None:
         self._instance_logger = self._class_logger.getChild(str(id(self)))
@@ -53,27 +60,19 @@ class MacronMonitor(SingleSiteBot):
             parsed_diff = diff.html_comparator(html_diff)
             self._instance_logger.debug('Collected a diff: %s', parsed_diff)
 
-            deleted_macrons = self.count_macrons(*parsed_diff['deleted-context'])
-            added_macrons = self.count_macrons(*parsed_diff['added-context'])
+            detected_issues = [detector.detect(change, parsed_diff) for detector in self.detectors]
 
-            if deleted_macrons > added_macrons:
-                rev_data = DeletedMacronRev(
-                    title=change['title'],
-                    user=change['user'],
-                    revision=change['revision'],
-                    added=added_macrons,
-                    removed=deleted_macrons
-                )
-                self._instance_logger.info('Detected a change with suspicious macron counts (%s): diffs (%s)', rev_data,
-                                           parsed_diff)
+            if any(detected_issues):
                 DETECTIONS_COUNT.inc()
-                print(rev_data.to_string())
-                self._update_alert_list(rev_data)
+                for suspicious_rev in detected_issues:
+                    print(suspicious_rev.to_string())
+                    self._update_alert_list(suspicious_rev)
+
         except pywikibot.exceptions.APIError as apierror:
             self._instance_logger.error("Received an exception connecting to the Wikimedia API", exc_info=apierror)
 
-    def _update_alert_list(self, alert_data: DeletedMacronRev) -> None:
-        page = pywikibot.Page(self.site, 'User:MacronMonitor/Alerts')
+    def _update_alert_list(self, alert_data: SuspiciousRev) -> None:
+        page = pywikibot.Page(self.site, alert_data.alert_page)
         current_list = page.get()
 
         new_content = current_list.replace('==Alerts==\n', f'==Alerts==\n{alert_data.to_string()}\n')
@@ -84,11 +83,6 @@ class MacronMonitor(SingleSiteBot):
             minor=False,
         )
         self._instance_logger.info("Added the alert to the alert page")
-
-    @staticmethod
-    def count_macrons(*string: str) -> int:
-        strings = str.join('', string).lower()
-        return sum([strings.count(c) for c in macrons])
 
     @staticmethod
     def suspicious_words(*strings: str) -> int:

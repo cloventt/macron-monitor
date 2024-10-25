@@ -219,22 +219,21 @@ WORDS = [
 
 SUSPICIOUS_WORDS = set(map(lambda word: unidecode(word.lower()), WORDS))
 
+MACRONS = ['ā', 'ē', 'ī', 'ō', 'ū']
+
 
 @dataclasses.dataclass()
-class DeletedMacronRev:
+class SuspiciousRev:
+    alert_page: str
     title: str
     user: str
     revision: dict
-    added: int
-    removed: int
+    reason: str
 
     def to_string(self):
-        return f"* ~~~~~ ({{{{diff2|{self.revision['new']}|diff}}}}) — [[{self.title}]] — [[User:{self.user}|{self.user}]] ([[User_talk:{self.user}|talk]] | [[Special:Contributions/{self.user}|contribs]]) — removed '''{self.removed-self.added}''' macron(s)"
+        return f"* ~~~~~ ({{{{diff2|{self.revision['new']}|diff}}}}) — [[{self.title}]] — [[User:{self.user}|{self.user}]] ([[User_talk:{self.user}|talk]] | [[Special:Contributions/{self.user}|contribs]]) — reason: ''{self.reason}''"
 
 
-@dataclasses.dataclass()
-class MisspelledWordRev:
-    title: str
-    user: str
-    revision: dict
-    word: str
+def count_macrons(*string: str) -> int:
+    strings = str.join('', string).lower()
+    return sum([strings.count(c) for c in MACRONS])
