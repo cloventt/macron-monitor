@@ -25,6 +25,11 @@ class test_UnMacronedLinkDetector(unittest.TestCase):
         self.assertEqual(unmacroned_link_regex.findall("the [[Kākapō|Kakapo]] has a [[Whanāu|Whanau]]"),
                          ['Kākapō', 'Whanāu'])
 
+    def test_ignores_links_with_macrons_not_replaced(self):
+        self.assertEqual(unmacroned_link_regex.findall("there is a link to [[Kākapō|Kākapō parrot]] here"), [])
+        self.assertEqual(unmacroned_link_regex.findall("there is a link to [[Māori people|Māori]] here"), [])
+        self.assertEqual(unmacroned_link_regex.findall("the [[Kākapō|Kākapō]] has a [[Whanāu|Whanāu]]"), [])
+
     def test_detector_does_detect_not_things_that_were_deleted(self):
         detector = UnMacronedLinkDetector()
 
@@ -46,7 +51,7 @@ class test_UnMacronedLinkDetector(unittest.TestCase):
                 'This line links to [[parrot|Kākapō]].',
                 'This line links to [[Kākapō|Kakapo]].',
             ],
-            'added-contexts': [],
+            'added-context': [],
         })
 
         self.assertEqual(detection_result, None)

@@ -75,7 +75,7 @@ class MacronMonitor(SingleSiteBot):
 
     def _update_alert_list(self, alert_data: SuspiciousRev) -> None:
         page = pywikibot.Page(self.site,
-                              #alert_data.alert_page,
+                              # alert_data.alert_page,
                               'User:MacronMonitor/Alerts'
                               )
         current_list = page.get()

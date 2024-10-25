@@ -3,7 +3,7 @@ from macron_monitor.detectors import Detector
 
 import re
 
-unmacroned_link_regex = re.compile(r'\[\[([^\[]*?(?=[āēīōū]+?)[^\[]*)\|.*?]]')
+unmacroned_link_regex = re.compile(r'\[\[([^\[]*?(?=[āēīōū]+?)[^\[]*)\|[^āēīōū]*?]]')
 
 
 class UnMacronedLinkDetector(Detector):
