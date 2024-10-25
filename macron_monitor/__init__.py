@@ -231,7 +231,7 @@ class SuspiciousRev:
     reason: str
 
     def to_string(self):
-        return f"* ~~~~~ ({{{{diff2|{self.revision['new']}|diff}}}}) — [[{self.title}]] — [[User:{self.user}|{self.user}]] ([[User_talk:{self.user}|talk]] | [[Special:Contributions/{self.user}|contribs]]) — reason: ''{self.reason}''"
+        return f"* ~~~~~ ({{{{diff2|{self.revision['new']}|diff}}}}) — '''[[{self.title}]]''' — [[User:{self.user}|{self.user}]] ([[User_talk:{self.user}|talk]] | [[Special:Contributions/{self.user}|contribs]]) — reason: ''{self.reason}''"
 
 
 def count_macrons(*string: str) -> int:
