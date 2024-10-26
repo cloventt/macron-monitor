@@ -2,7 +2,7 @@ import re
 
 from unidecode import unidecode
 
-from macron_monitor import SuspiciousRev, count_macrons
+from macron_monitor import SuspiciousRev
 from macron_monitor.detectors import Detector
 
 WORDS = ['Ahikōuka', 'Atatū', 'Eketāhuna', 'Hāmama', 'Hāpu', 'Hāpua', 'Hāwea', 'Hāwera', 'Hūkerenui', 'Kahikatea',

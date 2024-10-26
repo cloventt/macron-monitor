@@ -1,8 +1,6 @@
 import dataclasses
 import logging
 
-from unidecode import unidecode
-
 module_logger = logging.getLogger(__name__)
 
 MACRONS = ['ā', 'ē', 'ī', 'ō', 'ū']

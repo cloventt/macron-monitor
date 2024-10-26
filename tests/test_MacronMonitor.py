@@ -1,7 +1,6 @@
 import unittest
 
 from macron_monitor import count_macrons
-from macron_monitor.MacronMonitor import MacronMonitor
 
 
 class test_MacronMonitor(unittest.TestCase):
