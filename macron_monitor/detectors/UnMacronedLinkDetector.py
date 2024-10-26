@@ -10,12 +10,8 @@ class UnMacronedLinkDetector(Detector):
 
     alert_page = 'User:MacronMonitor/LinkAlerts'
 
-    @staticmethod
-    def flatten(xss):
-        return [x for xs in xss for x in xs]
-
     def detect(self, change: dict, diff: dict) -> SuspiciousRev:
-        matches = self.flatten([unmacroned_link_regex.findall(hunk) for hunk in diff['added-context']])
+        matches = self._flatten([unmacroned_link_regex.findall(hunk) for hunk in diff['added-context']])
         if any(matches):
             return SuspiciousRev(
                 alert_page=self.alert_page,
