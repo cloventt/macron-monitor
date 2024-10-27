@@ -13,7 +13,7 @@ class UnMacronedLinkDetector(Detector):
 
     _class_logger = module_logger.getChild(__qualname__)
 
-    alert_page = 'User:MacronMonitor/LinkAlerts'
+    alert_page = 'User:MacronMonitor/Alerts'
 
     def __init__(self,
                  wpnz_article_provider: WPNZArticleProvider,
