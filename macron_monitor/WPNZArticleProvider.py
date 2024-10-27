@@ -22,17 +22,20 @@ class WPNZArticleProvider:
         self._instance_logger.info('Beginning initial population of article title set')
         self._update_current_wpnz_articles()
 
-        loop = asyncio.get_event_loop()
-        task = loop.create_task(self._periodic_update())
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
 
         try:
-            asyncio.ensure_future(task)
+            loop.run_until_complete(self._periodic_update())
         except asyncio.CancelledError:
             pass
+        finally:
+            loop.run_until_complete(loop.shutdown_asyncgens())
+            loop.close()
 
     async def _periodic_update(self):
         while True:
-            await asyncio.sleep(60)  # hourly
+            await asyncio.sleep(60 * 60)  # hourly
             self._instance_logger.info("Running async update thread")
             self._update_current_wpnz_articles()
 
