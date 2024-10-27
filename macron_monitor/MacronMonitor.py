@@ -11,8 +11,9 @@ from pywikibot import diff
 from pywikibot.bot import SingleSiteBot
 from pywikibot.comms.eventstreams import EventStreams
 
-from macron_monitor import SUSPICIOUS_WORDS, module_logger, SuspiciousRev
+from macron_monitor import module_logger, SuspiciousRev
 from macron_monitor.detectors import Detector
+from macron_monitor.detectors.MaoriWordDetector import MaoriWordDetector
 from macron_monitor.detectors.RemovedMacronDetector import RemovedMacronDetector
 from macron_monitor.detectors.UnMacronedLinkDetector import UnMacronedLinkDetector
 
@@ -29,17 +30,23 @@ class MacronMonitor(SingleSiteBot):
     detectors: List[Detector] = [
         RemovedMacronDetector(),
         UnMacronedLinkDetector(),
+        MaoriWordDetector(),
     ]
 
-    def __init__(self, **kwargs) -> None:
+    def __init__(self,
+                 offline: bool = False,
+                 **kwargs) -> None:
         self._instance_logger = self._class_logger.getChild(str(id(self)))
 
         super().__init__(**kwargs)
 
         self.site = pywikibot.Site('en', 'wikipedia', user='MacronMonitor')
-        login_result = self.site.login()
-        if not login_result:
-            self._instance_logger.critical("Failed to log in")
+        self.site.login()
+        self._instance_logger.info("Logged in to wikipedia")
+
+        self.offline = offline
+        if self.offline:
+            self._instance_logger.info("Running in offline mode")
 
         self.stream = EventStreams(
             streams=['recentchange', 'revision-create'],
@@ -69,13 +76,15 @@ class MacronMonitor(SingleSiteBot):
                 for suspicious_rev in detected_issues:
                     if suspicious_rev is None:
                         continue
-                    print(suspicious_rev.to_string())
                     self._update_alert_list(suspicious_rev)
 
         except pywikibot.exceptions.APIError as apierror:
             self._instance_logger.error("Received an exception connecting to the Wikimedia API", exc_info=apierror)
 
     def _update_alert_list(self, alert_data: SuspiciousRev) -> None:
+        print(alert_data.to_string())
+        if self.offline:
+            return
         page = pywikibot.Page(self.site,
                               alert_data.alert_page,
                               # 'User:MacronMonitor/Alerts'
@@ -91,11 +100,6 @@ class MacronMonitor(SingleSiteBot):
         )
         self._instance_logger.info("Added the alert to the alert page")
 
-    @staticmethod
-    def suspicious_words(*strings: str) -> int:
-        words = [context.split() for contexts in strings for context in contexts]  # ouch my brain
-        return any([word in SUSPICIOUS_WORDS for word in words])
-
 
 @click.command()
 @click.option('--log-level', default='INFO', help='Level to use for logging to console')
@@ -105,7 +109,8 @@ class MacronMonitor(SingleSiteBot):
 @click.option('--oauth-access-secret', help='Access secret for login')
 @click.option('--oauth-creds-file', help='file in present working directory that contains oauth creds',
               default="oauth-creds.json")
-def run(log_level, oauth_consumer_token, oauth_consumer_secret, oauth_access_token, oauth_access_secret, oauth_creds_file):
+@click.option('--offline', help='Disable writing to alert pages', is_flag=True)
+def run(log_level, oauth_consumer_token, oauth_consumer_secret, oauth_access_token, oauth_access_secret, oauth_creds_file, offline):
     """Simple program that greets NAME for a total of COUNT times."""
     try:
         log_handler = logging.StreamHandler()
@@ -134,7 +139,7 @@ def run(log_level, oauth_consumer_token, oauth_consumer_secret, oauth_access_tok
 
         start_http_server(8420)
 
-        bot = MacronMonitor()
+        bot = MacronMonitor(offline=offline)
         bot.run()
     except KeyboardInterrupt as e:
         module_logger.error("Got asked to exit! I am now dying X_X")
