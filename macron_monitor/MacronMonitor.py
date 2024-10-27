@@ -12,6 +12,7 @@ from pywikibot.bot import SingleSiteBot
 from pywikibot.comms.eventstreams import EventStreams
 
 from macron_monitor import module_logger, SuspiciousRev
+from macron_monitor.WPNZArticleProvider import WPNZArticleProvider
 from macron_monitor.detectors import Detector
 from macron_monitor.detectors.MaoriWordDetector import MaoriWordDetector
 from macron_monitor.detectors.RemovedMacronDetector import RemovedMacronDetector
@@ -27,12 +28,6 @@ STREAM_LAG = Gauge('change_stream_lag_seconds',
 class MacronMonitor(SingleSiteBot):
     _class_logger = module_logger.getChild(__qualname__)
 
-    detectors: List[Detector] = [
-        RemovedMacronDetector(),
-        UnMacronedLinkDetector(),
-        MaoriWordDetector(),
-    ]
-
     def __init__(self,
                  offline: bool = False,
                  **kwargs) -> None:
@@ -47,6 +42,14 @@ class MacronMonitor(SingleSiteBot):
         self.offline = offline
         if self.offline:
             self._instance_logger.info("Running in offline mode")
+
+        self.wpnz_article_provider = WPNZArticleProvider()
+
+        self.detectors: List[Detector] = [
+            RemovedMacronDetector(self.wpnz_article_provider),
+            UnMacronedLinkDetector(self.wpnz_article_provider),
+            MaoriWordDetector(),
+        ]
 
         self.stream = EventStreams(
             streams=['recentchange', 'revision-create'],
@@ -110,7 +113,8 @@ class MacronMonitor(SingleSiteBot):
 @click.option('--oauth-creds-file', help='file in present working directory that contains oauth creds',
               default="oauth-creds.json")
 @click.option('--offline', help='Disable writing to alert pages', is_flag=True)
-def run(log_level, oauth_consumer_token, oauth_consumer_secret, oauth_access_token, oauth_access_secret, oauth_creds_file, offline):
+def run(log_level, oauth_consumer_token, oauth_consumer_secret, oauth_access_token, oauth_access_secret,
+        oauth_creds_file, offline):
     """Simple program that greets NAME for a total of COUNT times."""
     try:
         log_handler = logging.StreamHandler()
@@ -132,7 +136,8 @@ def run(log_level, oauth_consumer_token, oauth_consumer_secret, oauth_access_tok
         creds['access_token'] = oauth_access_token if oauth_access_token else creds['access_token']
         creds['access_secret'] = oauth_access_secret if oauth_access_secret else creds['access_secret']
 
-        authentication = (creds['consumer_token'], creds['consumer_secret'], creds['access_token'], creds['access_secret'])
+        authentication = (
+        creds['consumer_token'], creds['consumer_secret'], creds['access_token'], creds['access_secret'])
 
         pywikibot.config.usernames['wikipedia']['en'] = 'MacronMonitor'
         pywikibot.config.authenticate['en.wikipedia.org'] = authentication

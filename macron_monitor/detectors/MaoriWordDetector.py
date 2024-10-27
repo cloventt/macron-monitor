@@ -1,4 +1,5 @@
 import re
+from typing import Optional
 
 from unidecode import unidecode
 
@@ -26,11 +27,11 @@ WORDS = ['Ahikōuka', 'Atatū', 'Auahitūroa', 'Eketāhuna', 'Hinehōaka', 'Hine
          'Whakamārama', 'Whakatāne', 'Whakatīwai', 'Whangamatā', 'Whangamōmona', 'Whangaparāoa', 'Whangapē',
          'Whangākea', 'Whangārei', 'Wharekōpae', 'Wharepūhunga', 'Whānau', 'Whāngaimoana', 'Wāka', 'Wānaka', 'Wānanga',
          'Wētā', 'aihikirīmi', 'anā', 'hapū', 'hākari', 'hāngi', 'hēki', 'hīkoi', 'hōhonu', 'hōhā', 'hōiho', 'hū',
-         'kaikōrero', 'kakī', 'kamupūtu', 'kaputī', 'kaumātua', 'kirīmi', 'konā', 'korā', 'kurī', 'kā', 'kāinga',
-         'kākahu', 'kākāriki', 'kānga', 'kāo', 'kāore', 'kāpata', 'kāreti', 'kāti', 'kēmu', 'kī', 'kīhini', 'kōhanga',
+         'kaikōrero', 'kakī', 'kamupūtu', 'kaputī', 'kaumātua', 'kirīmi', 'konā', 'korā', 'kurī', 'kāinga',
+         'kākahu', 'kākāriki', 'kānga', 'kāo', 'kāore', 'kāpata', 'kāreti', 'kāti', 'kēmu', 'kīhini', 'kōhanga',
          'kōpū', 'kōrero', 'kōrua', 'kōtiro', 'kōwhai', 'kūaha', 'motokā', 'motukā', 'māhanga', 'māharahara', 'māhunga',
          'mānia', 'māripi', 'mātakitaki', 'mātua', 'māua', 'māui', 'māwhero', 'mīere', 'mīharo', 'mīti', 'mōhio',
-         'mōhiti', 'mōkai', 'mōrena', 'mōwhiti', 'ngāi', 'parāoa', 'pā', 'pākete', 'pānui', 'pāpā', 'pātai', 'pātītī',
+         'mōhiti', 'mōkai', 'mōrena', 'mōwhiti', 'ngāi', 'parāoa', 'pākete', 'pānui', 'pāpā', 'pātai', 'pātītī',
          'pēpi', 'pīnati', 'pīrangi', 'pōtae', 'pōuri', 'pūtu', 'rākau', 'rāpeti', 'rīwai', 'rōpū', 'rūma', 'tamāhine',
          'terēina', 'tuarā', 'tungāne', 'tuāhine', 'tākaro', 'tāna', 'tāne', 'tāngata', 'tāone', 'tātahi', 'tātou',
          'tēina', 'tēnei', 'tēnā', 'tēpu', 'tērā', 'tīma', 'tīmata', 'tīpuna', 'tōhi', 'tōkena', 'tōku', 'tū', 'tūpuna',
@@ -49,7 +50,7 @@ giant_regex = re.compile(r'[-\s—\[\'"]+(' + '|'.join(SUSPICIOUS_WORDS) + r')[-
 class MaoriWordDetector(Detector):
     alert_page = 'User:MacronMonitor/Alerts'
 
-    def detect(self, change: dict, diff: dict) -> SuspiciousRev:
+    def detect(self, change: dict, diff: dict) -> Optional[SuspiciousRev]:
         matches = self._flatten([giant_regex.findall(hunk.lower()) for hunk in diff['added-context']])
         if any(matches):
             return SuspiciousRev(

@@ -2,6 +2,7 @@ import unittest
 
 from macron_monitor import SuspiciousRev
 from macron_monitor.detectors.UnMacronedLinkDetector import unmacroned_link_regex, UnMacronedLinkDetector
+from tests.detectors import MockWPNZArticleProvider
 
 
 class test_UnMacronedLinkDetector(unittest.TestCase):
@@ -50,7 +51,9 @@ class test_UnMacronedLinkDetector(unittest.TestCase):
         self.assertEqual([], unmacroned_link_regex.findall("the [[Kākapō|Kākapō]] has a [[Whanāu|Whanāu]]"))
 
     def test_detector_does_detect_not_things_that_were_deleted(self):
-        detector = UnMacronedLinkDetector()
+        article_provider = MockWPNZArticleProvider()
+        article_provider.article_titles.update(['Whanāu', 'Kākapō'])
+        detector = UnMacronedLinkDetector(article_provider)
 
         detection_result = detector.detect({
             'title': 'Test Page',
@@ -76,7 +79,9 @@ class test_UnMacronedLinkDetector(unittest.TestCase):
         self.assertEqual(detection_result, None)
 
     def test_detector_does_detects_things_that_are_added(self):
-        detector = UnMacronedLinkDetector()
+        article_provider = MockWPNZArticleProvider()
+        article_provider.article_titles.update(['Whanāu', 'Kākapō'])
+        detector = UnMacronedLinkDetector(article_provider)
 
         detection_result = detector.detect({
             'title': 'Test Page',
@@ -107,6 +112,7 @@ class test_UnMacronedLinkDetector(unittest.TestCase):
                     'This line links to [[Whanāu|family]].',
                     'This line links to [[Whanāu|family]].',
                     'This line links to [[Whanāu|family]].',
+                    'This is a Japanese link to [[Kyūshu]] in Japan.',
                 ],
             })
 
@@ -118,7 +124,7 @@ class test_UnMacronedLinkDetector(unittest.TestCase):
                 'old': 1234567,
                 'new': 1234568,
             },
-            reason="link descriptions overwrite macrons from '''Kākapō, Whanāu'''"
+            reason="linkpipe over macrons from '''Kākapō, Whanāu'''"
         ))
 
 
