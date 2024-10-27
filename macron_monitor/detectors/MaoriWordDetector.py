@@ -18,33 +18,33 @@ WORDS = ['Ahikōuka', 'Atatū', 'Auahitūroa', 'Eketāhuna', 'Hinehōaka', 'Hine
          'Pākuratahi', 'Pārae Karetu', 'Pāremoremo', 'Pāua', 'Pāuatahanui', 'Pōhara', 'Pōhue', 'Pōkeno', 'Pōrangahau',
          'Pūerua', 'Pūhaorangi', 'Pūkio', 'Pūkorokoro', 'Pūponga', 'Pūrākaunui', 'Rangitūmau', 'Rotokākahi', 'Ruakākā',
          'Ruakōkoputuna', 'Rākau', 'Rāngaiika', 'Rānui', 'Rāpaki', 'Rāpaki-o-Te', 'Rātana', 'Rātapu', 'Rāwiri',
-         'Rūnanga', 'Taitā', 'Takapūwāhia', 'Takatāpui', 'Taupō', 'Te Pāti Māori', 'Tongapōrutu', 'Tungāne', 'Tā_moko',
+         'Rūnanga', 'Taitā', 'Takapūwāhia', 'Takatāpui', 'Taupō', 'Te Pāti Māori', 'Tongapōrutu', 'Tungāne', 'Tā moko',
          'Tāhunanui', 'Tākaka', 'Tākapu', 'Tākitimu', 'Tākou', 'Tāmaki', 'Tāmati', 'Tāme Iti', 'Tāne', 'Tāneatua',
          'Tānemahuta', 'Tāngarākau', 'Tāniko', 'Tātou', 'Tāwhaki', 'Tāwharanui', 'Tāwhiao', 'Tāwhirimātea', 'Tīnui',
          'Tīrau', 'Tīraumea', 'Tītahi', 'Tōrere', 'Tōtara', 'Tōtaranui', 'Tūhauwiri', 'Tūmatauenga', 'Tūranga',
          'Tūrangi', 'Tūtewehiwehi', 'Tūwharetoa', 'Tūāwhiorangi', 'Tūī', 'Umukurī', 'Waihāhā', 'Waimā', 'Waimārama',
          'Waipātiki', 'Wairau', 'Wairoa', 'Waitematā', 'Waitākere', 'Waitārere', 'Waitōtara', 'Whaikōrero',
          'Whakamārama', 'Whakatāne', 'Whakatīwai', 'Whangamatā', 'Whangamōmona', 'Whangaparāoa', 'Whangapē',
-         'Whangākea', 'Whangārei', 'Wharekōpae', 'Wharepūhunga', 'Whānau', 'Whāngaimoana', 'Wāka', 'Wānaka', 'Wānanga',
-         'Wētā', 'aihikirīmi', 'anā', 'hapū', 'hākari', 'hāngi', 'hēki', 'hīkoi', 'hōhonu', 'hōhā', 'hōiho', 'hū',
-         'kaikōrero', 'kakī', 'kamupūtu', 'kaputī', 'kaumātua', 'kirīmi', 'konā', 'korā', 'kurī', 'kāinga',
+         'Whangākea', 'Whangārei', 'Wharekōpae', 'Wharepūhunga', 'Whānau', 'Whāngaimoana', 'Wānaka', 'Wānanga',
+         'Wētā', 'aihikirīmi', 'hapū', 'hākari', 'hāngi', 'hīkoi', 'hōhonu', 'hōhā', 'hōiho',
+         'kaikōrero', 'kakī', 'kamupūtu', 'kaputī', 'kaumātua', 'kirīmi', 'kāinga',
          'kākahu', 'kākāriki', 'kānga', 'kāo', 'kāore', 'kāpata', 'kāreti', 'kāti', 'kēmu', 'kīhini', 'kōhanga',
          'kōpū', 'kōrero', 'kōrua', 'kōtiro', 'kōwhai', 'kūaha', 'motokā', 'motukā', 'māhanga', 'māharahara', 'māhunga',
          'mānia', 'māripi', 'mātakitaki', 'mātua', 'māua', 'māui', 'māwhero', 'mīere', 'mīharo', 'mīti', 'mōhio',
-         'mōhiti', 'mōkai', 'mōrena', 'mōwhiti', 'ngāi', 'parāoa', 'pākete', 'pānui', 'pāpā', 'pātai', 'pātītī',
+         'mōhiti', 'mōkai', 'mōrena', 'mōwhiti', 'ngāi', 'parāoa', 'pākete', 'pānui', 'pātai', 'pātītī',
          'pēpi', 'pīnati', 'pīrangi', 'pōtae', 'pōuri', 'pūtu', 'rākau', 'rāpeti', 'rīwai', 'rōpū', 'rūma', 'tamāhine',
          'terēina', 'tuarā', 'tungāne', 'tuāhine', 'tākaro', 'tāna', 'tāne', 'tāngata', 'tāone', 'tātahi', 'tātou',
-         'tēina', 'tēnei', 'tēnā', 'tēpu', 'tērā', 'tīma', 'tīmata', 'tīpuna', 'tōhi', 'tōkena', 'tōku', 'tū', 'tūpuna',
-         'tūrangawaewae', 'tūru', 'tūtae', 'whaikōrero', 'whetū', 'whā', 'whānau', 'whāngai', 'wāhine', 'Ākau',
-         'Ākitio', 'Ākura', 'Āpirana', 'Āpiti', 'Ārohirohi', 'Ātiamuri', 'Āwhitu', 'ākonga', 'āku', 'āna', 'āporo',
-         'āpōpō', 'ārai', 'āta', 'ātaahua', 'āwhina', 'ēnei', 'Ōakura', 'Ōhaeawai', 'Ōhau', 'Ōhaupō', 'Ōhingaiti',
+         'tēina', 'tēnei', 'tīmata', 'tīpuna', 'tōhi', 'tōkena', 'tōku', 'tūpuna',
+         'tūrangawaewae', 'tūru', 'tūtae', 'whaikōrero', 'whetū', 'whānau', 'whāngai', 'wāhine',
+         'Ākitio', 'Ākura', 'Āpirana', 'Āpiti', 'Ārohirohi', 'Ātiamuri', 'Āwhitu', 'ākonga', 'āporo',
+         'āpōpō', 'ātaahua', 'āwhina', 'Ōakura', 'Ōhaeawai', 'Ōhau', 'Ōhaupō', 'Ōhingaiti',
          'Ōhiwa', 'Ōhope', 'Ōhura', 'Ōkaihau', 'Ōkato', 'Ōkiwi Bay', 'Ōkura', 'Ōkārito', 'Ōmiha', 'Ōmokoroa', 'Ōmāpere',
          'Ōnoke', 'Ōpaheke', 'Ōpaki', 'Ōpou', 'Ōpunake', 'Ōpārara', 'Ōpārau', 'Ōpōtiki', 'Ōraka', 'Ōrere', 'Ōrākei',
          'Ōtaki', 'Ōtara', 'Ōtaua', 'Ōtautahi', 'Ōtāhuhu', 'Ōtāne', 'Ōwhango', 'Ōwhata', 'Ōwhiro']
 
 SUSPICIOUS_WORDS = set(map(lambda word: unidecode(word).lower(), WORDS))
 
-giant_regex = re.compile(r'[-\s—\[\'"]+(' + '|'.join(SUSPICIOUS_WORDS) + r')[-—\s.,<!?:;\'\]"]+')
+giant_regex = re.compile(r'(?![^{]*}})[-\s—\[\'"]+(' + '|'.join(SUSPICIOUS_WORDS) + r')[-—\s.,<!?:;\'\]\"{]+')
 
 
 class MaoriWordDetector(Detector):

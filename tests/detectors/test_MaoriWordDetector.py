@@ -51,7 +51,7 @@ class test_MaoriWordDetector(unittest.TestCase):
             })
         self.assertEqual(None, result)
 
-    def test_ignores_detects_misspelled_words(self):
+    def test_detects_misspelled_words(self):
         detector = MaoriWordDetector()
 
         result = detector.detect({
@@ -82,6 +82,25 @@ class test_MaoriWordDetector(unittest.TestCase):
             },
             reason="possible Māori word(s) missing macrons: '''mangere, morena, otautahi, tui, wahine, whanau'''"
         ), result)
+
+    def test_ignores_misspelled_words_inside_templates(self):
+        detector = MaoriWordDetector()
+
+        result = detector.detect({
+            'title': 'Test Page',
+            'user': 'Cloventt',
+            'revision': {
+                'old': 1234567,
+                'new': 1234568,
+            },
+        },
+            {
+                'removed-context': [],
+                'added-context': [
+                    'citation.<ref>{{citation|url=http://rnz.co.nz/te-ao-maori-is-a-word|place=Otautahi}}</ref>',
+                ],
+            })
+        self.assertEqual(None, result)
 
 
 if __name__ == '__main__':
