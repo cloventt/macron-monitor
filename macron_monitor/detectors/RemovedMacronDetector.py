@@ -32,5 +32,5 @@ class RemovedMacronDetector(Detector):
                 title=change['title'],
                 user=change['user'],
                 revision=change['revision'],
-                reason=f"removed '''{deleted_macrons - added_macrons}''' macron(s)",
+                reason=f"removed '''{deleted_macrons - added_macrons}''' macron(s) from a WPNZ article",
             )

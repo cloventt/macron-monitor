@@ -33,5 +33,5 @@ class UnMacronedLinkDetector(Detector):
                 title=change['title'],
                 user=change['user'],
                 revision=change['revision'],
-                reason=f"linkpipe over macrons from '''{', '.join(sorted(list(set(matches))))}'''",
+                reason=f"linkpipe over macrons in link to WPNZ article(s) '''{', '.join(sorted(list(set(matches))))}'''",
             )

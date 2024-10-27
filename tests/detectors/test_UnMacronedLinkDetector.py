@@ -124,7 +124,7 @@ class test_UnMacronedLinkDetector(unittest.TestCase):
                 'old': 1234567,
                 'new': 1234568,
             },
-            reason="linkpipe over macrons from '''Kākapō, Whanāu'''"
+            reason="linkpipe over macrons in link to WPNZ article(s) '''Kākapō, Whanāu'''"
         ))
 
 
