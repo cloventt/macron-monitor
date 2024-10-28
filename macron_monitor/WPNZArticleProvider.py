@@ -1,6 +1,8 @@
 import asyncio
 import re
+import time
 from datetime import datetime, timezone
+from threading import Thread
 
 import requests
 
@@ -22,20 +24,13 @@ class WPNZArticleProvider:
         self._instance_logger.info('Beginning initial population of article title set')
         self._update_current_wpnz_articles()
 
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
+        daemon = Thread(target=self._periodic_update, daemon=True, name='background_WPNZArticleUpdate')
+        daemon.start()
 
-        try:
-            loop.run_until_complete(self._periodic_update())
-        except asyncio.CancelledError:
-            pass
-        finally:
-            loop.run_until_complete(loop.shutdown_asyncgens())
-            loop.close()
-
-    async def _periodic_update(self):
+    def _periodic_update(self):
+        self._instance_logger.info("Started background update thread")
         while True:
-            await asyncio.sleep(60 * 60)  # hourly
+            time.sleep(60 * 60)  # hourly
             self._instance_logger.info("Running async update thread")
             self._update_current_wpnz_articles()
 

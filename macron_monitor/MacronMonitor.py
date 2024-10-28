@@ -44,6 +44,7 @@ class MacronMonitor(SingleSiteBot):
             self._instance_logger.info("Running in offline mode")
 
         self.wpnz_article_provider = WPNZArticleProvider()
+        self._instance_logger.info("Created the WPNZArticleProvider")
 
         self.detectors: List[Detector] = [
             RemovedMacronDetector(self.wpnz_article_provider),
@@ -58,6 +59,7 @@ class MacronMonitor(SingleSiteBot):
 
     def run(self) -> None:
         self.stream.register_filter(server_name='en.wikipedia.org', type='edit', namespace=0, bot=False)
+        self._instance_logger.info("Beginning to listen for edits")
         while True:
             change = next(iter(self.stream))
             self._handle_change(change)
