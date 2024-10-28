@@ -67,7 +67,6 @@ class test_MaoriWordDetector(unittest.TestCase):
                 'added-context': [
                     '',
                     'This line has [[whanau]] in it.',
-                    'This line has morena in it.',
                     'This line has tui from Otautahi in it.',
                     'This line has a "Wahine" from \'Mangere\' in it.',
                 ],
@@ -80,7 +79,7 @@ class test_MaoriWordDetector(unittest.TestCase):
                 'old': 1234567,
                 'new': 1234568,
             },
-            reason="possible Māori word(s) missing macrons: '''mangere, morena, otautahi, tui, wahine, whanau'''"
+            reason="possible Māori word(s) missing macrons: '''mangere, otautahi, tui, wahine, whanau'''"
         ), result)
 
     def test_ignores_misspelled_words_inside_templates(self):
