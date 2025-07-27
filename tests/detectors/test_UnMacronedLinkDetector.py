@@ -117,7 +117,7 @@ class test_UnMacronedLinkDetector(unittest.TestCase):
             })
 
         self.assertEqual(detection_result, SuspiciousRev(
-            alert_page='User:MacronMonitor/LinkAlerts',
+            alert_page='User:MacronMonitor/Alerts',
             title='Test Page',
             user='Cloventt',
             revision={
