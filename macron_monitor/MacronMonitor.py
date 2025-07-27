@@ -49,7 +49,7 @@ class MacronMonitor(SingleSiteBot):
         self.detectors: List[Detector] = [
             RemovedMacronDetector(self.wpnz_article_provider),
             UnMacronedLinkDetector(self.wpnz_article_provider),
-            MaoriWordDetector(),
+            # MaoriWordDetector(),
         ]
 
         self.stream = EventStreams(

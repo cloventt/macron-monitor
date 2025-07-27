@@ -21,7 +21,7 @@ WORDS = ['Ahikōuka', 'Atatū', 'Auahitūroa', 'Eketāhuna', 'Hinehōaka', 'Hine
          'Rūnanga', 'Taitā', 'Takapūwāhia', 'Takatāpui', 'Taupō', 'Te Pāti Māori', 'Tongapōrutu', 'Tungāne', 'Tā moko',
          'Tāhunanui', 'Tākaka', 'Tākapu', 'Tākitimu', 'Tākou', 'Tāme Iti', 'Tāneatua',
          'Tānemahuta', 'Tāngarākau', 'Tāniko', 'Tātou', 'Tāwhaki', 'Tāwharanui', 'Tāwhiao', 'Tāwhirimātea', 'Tīnui',
-         'Tīrau', 'Tīraumea', 'Tītahi', 'Tōrere', 'Tōtara', 'Tōtaranui', 'Tūhauwiri', 'Tūmatauenga', 
+         'Tīrau', 'Tīraumea', 'Tītahi', 'Tōrere', 'Tōtara', 'Tōtaranui', 'Tūhauwiri', 'Tūmatauenga',
          'Tūrangi', 'Tūtewehiwehi', 'Tūwharetoa', 'Tūāwhiorangi', 'Umukurī', 'Waihāhā', 'Waimā', 'Waimārama',
          'Waipātiki', 'Wairau', 'Wairoa', 'Waitematā', 'Waitākere', 'Waitārere', 'Waitōtara', 'Whaikōrero',
          'Whakamārama', 'Whakatāne', 'Whakatīwai', 'Whangamatā', 'Whangamōmona', 'Whangaparāoa', 'Whangapē',
