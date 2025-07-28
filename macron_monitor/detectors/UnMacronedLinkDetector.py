@@ -29,7 +29,7 @@ class UnMacronedLinkDetector(Detector):
 
         alert_str = ', '.join([f'[[{m[0]}|{m[1]}]]' for m in removed_macron_matches])
 
-        if any(wpnz_matches):
+        if any(removed_macron_matches):
             return SuspiciousRev(
                 alert_page=self.alert_page,
                 title=change['title'],
