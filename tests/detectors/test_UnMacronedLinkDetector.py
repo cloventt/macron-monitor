@@ -127,6 +127,39 @@ class test_UnMacronedLinkDetector(unittest.TestCase):
             reason="linkpipe over macrons in link to WPNZ article(s) '''Kākapō, Whanāu'''"
         ))
 
+    def test_detector_catches_pipe_over_word(self):
+        article_provider = MockWPNZArticleProvider()
+        article_provider.article_titles.update(['Kākāpō'])
+        detector = UnMacronedLinkDetector(article_provider)
+
+        detection_result = detector.detect({
+            'title': 'Test Page',
+            'user': 'Cloventt',
+            'revision': {
+                'old': 1234567,
+                'new': 1234568,
+            },
+        },
+            {
+                'removed-context': [
+                    'This line links to [[Kākapō]].',
+                ],
+                'added-context': [
+                    'This line links to [[Kākāpō|Kakapo]].',
+                ],
+            })
+
+        self.assertEqual(detection_result, SuspiciousRev(
+            alert_page='User:MacronMonitor/Alerts',
+            title='Test Page',
+            user='Cloventt',
+            revision={
+                'old': 1234567,
+                'new': 1234568,
+            },
+            reason="linkpipe over macrons in link to WPNZ article(s) '''Kākāpō'''"
+        ))
+
 
 if __name__ == '__main__':
     unittest.main()
