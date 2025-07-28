@@ -90,7 +90,7 @@ class test_UnMacronedLinkDetector(unittest.TestCase):
                 'old': 1234567,
                 'new': 1234568,
             },
-            reason="linkpipe over macrons in link to WPNZ article(s) ''(<nowiki>[[Kākapō|Kakapo]], [[Whanāu|family]]</nowiki>)''"
+            reason="linkpipe over macrons in link to WPNZ article(s) '''(<nowiki>[[Kākapō|Kakapo]], [[Whanāu|family]]</nowiki>)'''"
         ))
 
     def test_detector_catches_partial_pipe_over_word(self):
@@ -123,7 +123,7 @@ class test_UnMacronedLinkDetector(unittest.TestCase):
                 'old': 1234567,
                 'new': 1234568,
             },
-            reason="linkpipe over macrons in link to WPNZ article(s) ''(<nowiki>[[Kākāpō|Kākapo]]</nowiki>)''"
+            reason="linkpipe over macrons in link to WPNZ article(s) '''(<nowiki>[[Kākāpō|Kākapo]]</nowiki>)'''"
         ))
 
 

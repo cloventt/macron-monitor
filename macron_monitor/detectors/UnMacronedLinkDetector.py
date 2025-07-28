@@ -35,5 +35,5 @@ class UnMacronedLinkDetector(Detector):
                 title=change['title'],
                 user=change['user'],
                 revision=change['revision'],
-                reason=f"linkpipe over macrons in link to WPNZ article(s) ''(<nowiki>{alert_str}</nowiki>)''",
+                reason=f"linkpipe over macrons in link to WPNZ article(s) '''(<nowiki>{alert_str}</nowiki>)'''",
             )
