@@ -1,12 +1,13 @@
 from typing import Optional
 
-from macron_monitor import SuspiciousRev, module_logger
+from macron_monitor import SuspiciousRev, module_logger, count_macrons, contains_macron
 from macron_monitor.WPNZArticleProvider import WPNZArticleProvider
 from macron_monitor.detectors import Detector
 
 import re
 
-unmacroned_link_regex = re.compile(r'\[\[([^\[\]<>{}]*?(?=[ĀĒĪŌŪāēīōū]+?)[^\[\]<>{}]*?)\|[^ĀĒĪŌŪāēīōū]*?]]')
+link_regex = re.compile(r'\[\[([^\[\]<>{}]*?(?=[ĀĒĪŌŪāēīōū]+?)[^\[\]<>{}]*?)\|(.*?)]]')
+unmacroned_link_regex = re.compile(r'\[\[([^\[\]<>{}]*?(?=[ĀĒĪŌŪāēīōū]+?)[^\[\]<>{}]*?)\|([^ĀĒĪŌŪāēīōū]*?)]]')
 
 
 class UnMacronedLinkDetector(Detector):
@@ -22,16 +23,17 @@ class UnMacronedLinkDetector(Detector):
         self.wpnz_article_provider = wpnz_article_provider
 
     def detect(self, change: dict, diff: dict) -> Optional[SuspiciousRev]:
-        matches = self._flatten([unmacroned_link_regex.findall(hunk) for hunk in diff['added-context']])
+        matches = self._flatten([link_regex.findall(hunk) for hunk in diff['added-context']])
+        wpnz_matches = [m for m in matches if contains_macron(m[0]) and m[0] in self.wpnz_article_provider.article_titles]
+        removed_macron_matches = sorted(list(set(m for m in wpnz_matches if count_macrons(m[0]) > count_macrons(m[1]))))
 
-        # filter only to links to articles within WPNZ
-        # should filter out all the japanese and arabic articles
-        wpnz_matches = filter(lambda m: m in self.wpnz_article_provider.article_titles, matches)
+        alert_str = ', '.join([f'[[{m[0]}|{m[1]}]]' for m in removed_macron_matches])
+
         if any(wpnz_matches):
             return SuspiciousRev(
                 alert_page=self.alert_page,
                 title=change['title'],
                 user=change['user'],
                 revision=change['revision'],
-                reason=f"linkpipe over macrons in link to WPNZ article(s) '''{', '.join(sorted(list(set(matches))))}'''",
+                reason=f"linkpipe over macrons in link to WPNZ article(s) ''(<nowiki>{alert_str}</nowiki>)''",
             )

@@ -1,54 +1,20 @@
 import unittest
 
 from macron_monitor import SuspiciousRev
-from macron_monitor.detectors.UnMacronedLinkDetector import unmacroned_link_regex, UnMacronedLinkDetector
+from macron_monitor.detectors.UnMacronedLinkDetector import link_regex, UnMacronedLinkDetector
 from tests.detectors import MockWPNZArticleProvider
 
 
 class test_UnMacronedLinkDetector(unittest.TestCase):
-    def test_ignores_links_without_macrons(self):
-        self.assertEqual([], unmacroned_link_regex.findall("there is no link here"))
-        self.assertEqual([], unmacroned_link_regex.findall("there is a no macron link [[here]]"))
-        self.assertEqual([], unmacroned_link_regex.findall("there is a no macron [[link]] here"))
-        self.assertEqual([], unmacroned_link_regex.findall("[[there]] is a no macron [[link]] here"))
-        self.assertEqual([], unmacroned_link_regex.findall("there is a no macron link [[here|here]]"))
-        self.assertEqual([], unmacroned_link_regex.findall("there is a no macron [[link|link]] here"))
-        self.assertEqual([], unmacroned_link_regex.findall("[[there|there]] is a no macron [[link]] here"))
-
-    def test_ignores_links_with_macrons_but_no_replacement(self):
-        self.assertEqual([], unmacroned_link_regex.findall("there is a link to [[Kākapō]] here"))
-        self.assertEqual([], unmacroned_link_regex.findall("there is a link to [[Whanāu]] here"))
-        self.assertEqual([], unmacroned_link_regex.findall("the [[Kākapō]] has a [[Whanāu]]"))
-        self.assertEqual(
-            [],
-            unmacroned_link_regex.findall("[[Āorangi]] is a cool place.<ref>{{cite|url=}}</ref> [[yep]]"),
-        )
-
-    def test_finds_links_with_macrons_replaced(self):
-        self.assertEqual(['Kākapō'], unmacroned_link_regex.findall("there is a link to [[Kākapō|Kakapo]] here"))
-        self.assertEqual(['Whanāu'], unmacroned_link_regex.findall("there is a link to [[Whanāu|Whanau]] here"))
-        self.assertEqual(
-            ['Kākapō', 'Whanāu'],
-            unmacroned_link_regex.findall("the [[Kākapō|Kakapo]] has a [[Whanāu|Whanau]]"),
-        )
-        self.assertEqual(
-            ['Whanāu'],
-            unmacroned_link_regex.findall("the [[Kākapō]] has a [[Whanāu|Whanau]]"),
-        )
-
-        self.assertEqual(
-            ['Whanāu'],
-            unmacroned_link_regex.findall("the [[Kākapō]] has ō a [[Whanāu|Whanau]]"),
-        )
-        self.assertEqual(
-            ['Whanāu', 'Āorangi'],
-            unmacroned_link_regex.findall("the [[Kākapō]] has ō a [[Whanāu|Whanau]] in [[Āorangi|Aorangi]]"),
-        )
-
-    def test_ignores_links_with_macrons_not_replaced(self):
-        self.assertEqual([], unmacroned_link_regex.findall("there is a link to [[Kākapō|Kākapō parrot]] here"))
-        self.assertEqual([], unmacroned_link_regex.findall("there is a link to [[Māori people|Māori]] here"))
-        self.assertEqual([], unmacroned_link_regex.findall("the [[Kākapō|Kākapō]] has a [[Whanāu|Whanāu]]"))
+    def test_link_regex(self):
+        self.assertEqual([], link_regex.findall("there is no link here"))
+        self.assertEqual([], link_regex.findall("there is no piped link [[here]]"))
+        self.assertEqual([], link_regex.findall("there is a macron but no piped link [[hēre]]"))
+        self.assertEqual([], link_regex.findall("there is no macron but a piped link [[here|here]]"))
+        self.assertEqual([('hēre', 'hēre')], link_regex.findall("there is a macron and a piped link [[hēre|hēre]]"))
+        self.assertEqual([('hēre', 'here')], link_regex.findall("there is a macron and a piped link [[hēre|here]]"))
+        self.assertEqual([('ĀĒĪŌŪāēīōū', 'ĀĒĪŌŪāēīōū')], link_regex.findall("there is a macron and a piped link [[ĀĒĪŌŪāēīōū|ĀĒĪŌŪāēīōū]]"))
+        self.assertEqual([('ĀĒĪŌŪāēīōū', 'AEIOUaeiou')], link_regex.findall("there is a macron and a piped link [[ĀĒĪŌŪāēīōū|AEIOUaeiou]]"))
 
     def test_detector_does_detect_not_things_that_were_deleted(self):
         article_provider = MockWPNZArticleProvider()
@@ -124,10 +90,10 @@ class test_UnMacronedLinkDetector(unittest.TestCase):
                 'old': 1234567,
                 'new': 1234568,
             },
-            reason="linkpipe over macrons in link to WPNZ article(s) '''Kākapō, Whanāu'''"
+            reason="linkpipe over macrons in link to WPNZ article(s) ''(<nowiki>[[Kākapō|Kakapo]], [[Whanāu|family]]</nowiki>)''"
         ))
 
-    def test_detector_catches_pipe_over_word(self):
+    def test_detector_catches_partial_pipe_over_word(self):
         article_provider = MockWPNZArticleProvider()
         article_provider.article_titles.update(['Kākāpō'])
         detector = UnMacronedLinkDetector(article_provider)
@@ -145,7 +111,7 @@ class test_UnMacronedLinkDetector(unittest.TestCase):
                     'This line links to [[Kākapō]].',
                 ],
                 'added-context': [
-                    'This line links to [[Kākāpō|Kakapo]].',
+                    'This line links to [[Kākāpō|Kākapo]].',
                 ],
             })
 
@@ -157,7 +123,7 @@ class test_UnMacronedLinkDetector(unittest.TestCase):
                 'old': 1234567,
                 'new': 1234568,
             },
-            reason="linkpipe over macrons in link to WPNZ article(s) '''Kākāpō'''"
+            reason="linkpipe over macrons in link to WPNZ article(s) ''(<nowiki>[[Kākāpō|Kākapo]]</nowiki>)''"
         ))
 
 

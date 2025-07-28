@@ -1,5 +1,6 @@
 import dataclasses
 import logging
+import re
 
 module_logger = logging.getLogger(__name__)
 
@@ -21,3 +22,9 @@ class SuspiciousRev:
 def count_macrons(*string: str) -> int:
     strings = str.join('', string).lower()
     return sum([strings.count(c) for c in MACRONS])
+
+
+_macron_regex = re.compile(r'[ĀĒĪŌŪāēīōū]')
+
+def contains_macron(string: str) -> bool:
+    return bool(_macron_regex.findall(string))
